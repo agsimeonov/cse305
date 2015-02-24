@@ -1,0 +1,36 @@
+A = [1000,100,10,1]; <br>
+B = [1,2,3,4]; <br>
+var sum = 0; <br>
+foreach i in reverse(A) <br>
+<dd>  foreach j in reverse(B)<br>
+<dd><dd> {sum = sum + i*j; } <br>
+document.write(sum);<br>
+
+<SCRIPT language="JavaScript">
+
+var A = [1000,100,10,1]; 
+var B = [1,2,3,4]; 
+var sum = 0;
+
+//... rest of your program ...
+function preverse(x,y) {
+    var n = x.length-1;
+    for(var i=0; i<=n; i++) {
+	y(x[n-i]);
+    }
+}
+
+var temp = 0;
+function innerloop(x) {
+    sum = sum + temp*x;
+}
+
+function outerloop(x) {
+    temp = x;
+    preverse(B, innerloop);
+}
+
+preverse(A, outerloop);
+document.write(sum);
+
+</SCRIPT>

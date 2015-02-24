@@ -1,0 +1,18 @@
+Standard ML of New Jersey v110.54 [built: Fri Jun 24 16:28:49 2005]
+- use "points.sml";
+[opening points.sml]
+[autoloading]
+[autoloading done]
+opening Math
+
+	... all the math functions ...
+
+datatype point = cart of real * real | polar of real * real
+val xcoord = fn : point -> real
+val ycoord = fn : point -> real
+val dist = fn : point * point -> real
+val it = () : unit
+
+- dist(cart(0.0,0.0), polar(2.0,1.5707));
+val it = 2.0 : real
+- 

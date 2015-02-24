@@ -1,0 +1,31 @@
+LAZY ML
+
+fun primes = sieve_all(numsfrom(2));
+
+fun numsfrom(n) = n :: numsfrom(n+1);
+
+fun sieve_all(p::t) = p :: sieve_all(sieve(p,t));
+
+fun sieve(p,h::t)) = if (h mod p == 0) then sieve(p,t)
+		 else p :: sieve(p,t);
+
+
+TRACE OF LAZY EVALUATION
+
+primes
+
+=> sieve_all(numsfrom(2))
+
+=> sieve_all(2::numsfrom(2+1))
+
+=> 2 :: sieve_all(sieve(2,numsfrom(2+1)))
+
+=> 2 :: sieve_all(sieve(2, numsfrom(3)))
+
+=> 2 :: sieve_all(sieve(2, 3::numsfrom(3+1))
+
+=> 2 :: sieve_all(3:: sieve(2, numsfrom(3+1))
+
+=> 2 :: 3 :: sieve_all(sieve(3, sieve(2, numsfrom(3+1))))
+
+=> ...

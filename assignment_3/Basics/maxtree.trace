@@ -1,0 +1,17 @@
+castor % sml
+Standard ML of New Jersey v110.54 [built: Fri Jun 24 16:28:49 2005]
+- use "maxtree.sml";
+[opening maxtree.sml]
+datatype 'a tree = leaf of 'a | node of 'a tree * 'a tree
+val leaf1 = leaf 10 : int tree
+val leaf2 = leaf 20 : int tree
+val leaf3 = leaf 30 : int tree
+val leaf4 = leaf 40 : int tree
+val node3 = node (leaf 30,leaf 40) : int tree
+val node2 = node (leaf 10,leaf 20) : int tree
+val node1 = node (node (leaf #,leaf #),node (leaf #,leaf #)) : int tree
+val maxtree = fn : int tree -> int
+val it = () : unit
+- maxtree(node1);
+val it = 40 : int
+- 

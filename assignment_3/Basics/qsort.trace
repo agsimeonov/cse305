@@ -1,0 +1,21 @@
+castor % sml
+Standard ML of New Jersey v110.54 [built: Fri Jun 24 16:28:49 2005]
+- use "qsort.sml";
+[opening qsort.sml]
+val partition = fn : int * int list -> int list * int list
+val qsort = fn : int list -> int list
+val it = () : unit
+
+- qsort([5,3,6,2,7,1,1]);
+val it = [1,1,2,3,5,6,7] : int list
+
+- qsort([]);
+val it = [] : int list
+
+- qsort(["b","a","c"]);
+stdIn:4.1-4.21 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: int list
+  operand:         string list
+  in expression:
+    qsort ("b" :: "a" :: "c" :: nil)
+- 

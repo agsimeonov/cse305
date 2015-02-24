@@ -1,0 +1,24 @@
+castor % sml
+Standard ML of New Jersey v110.54 [built: Fri Jun 24 16:28:49 2005]
+- use "red.sml";
+[opening red.sml]
+val sum1 = fn : int list -> int
+val prod1 = fn : int list -> int
+val any1 = fn : bool list -> bool
+val all1 = fn : bool list -> bool
+val append1 = fn : 'a list * 'a list -> 'a list
+val reduce = fn : ('a * 'b -> 'b) * 'b -> 'a list -> 'b
+val sum2 = fn : int list -> int
+val prod2 = fn : int list -> int
+val any2 = fn : bool list -> bool
+val all2 = fn : bool list -> bool
+val append2 = fn : 'a list * 'a list -> 'a list
+val it = () : unit
+- 
+- 
+- sum2([1,2,3,4,5]);
+val it = 15 : int
+- append2([1,2,3], [4,5,6]); 
+val it = [1,2,3,4,5,6] : int list
+- 
+-

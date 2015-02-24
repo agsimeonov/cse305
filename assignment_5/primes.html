@@ -1,0 +1,43 @@
+<SCRIPT language="JavaScript">
+
+numsfrom = function(n){ 
+    var thk = function(){return numsfrom(n+1);};
+    return [n,thk];
+};
+
+function sieve(p, nums){
+    var thk = function(){return sieve(p,nums[1]());};
+    if((nums[0] % p) == 0) {
+	return thk();
+    }
+    else {
+	return [nums[0],thk];
+    }
+}
+			
+function sieveall(nums) {
+    var thk = function(){return sieveall(sieve(nums[0],nums[1]()));};
+    return [nums[0],thk];
+}
+
+primes = sieveall(numsfrom(2));
+
+function take(n,nums) {
+	if (n == 0) return;
+	document.write(nums[0] + ' ');
+	return take(n-1,nums[1]());
+} 
+	
+function goprimes(){
+	var numprimes = document.getElementById('numprimes');
+	var n = parseInt(numprimes.value);
+        if(isNaN(n)) 
+	    document.write('Not a number. Good-bye!');
+        else take(n,primes);
+}
+
+</SCRIPT>
+
+<input type='text' id='numprimes' />
+
+<input type='button' onclick='goprimes()' value='Enter Number of Primes' />

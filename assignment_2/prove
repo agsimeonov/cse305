@@ -1,0 +1,106 @@
+% _______ TOP-LEVEL DRIVER ______________________________________________
+
+verify(File) :-   
+	open(File,read,Stream),
+	lex(Stream,Tokens),
+	parse(Tokens,Triple),
+	prove(Triple),
+	close(Stream).
+
+prove(triple(Pre,Stmt,Post)) :- 
+        (prove(Pre,Stmt,Post)
+          -> nl, write('The program is verified for partial correctness!')
+          ;  nl, write('The proof failed.')
+        ), nl, nl.
+
+prove(Pre,Stmt,Post) :-
+	wp(WP,Stmt,Post),
+	theorem((Pre --> WP)).
+
+
+%_________ WRITE PROLOG RULES FOR wp OVER HERE ___________________________
+
+% Sample rule for if-then-else shown below, assuming that the parsetree is 
+% represented by a term if(B,Then,Else) where 'B' is the parsetree for the
+% boolean expression, 'Then' is the parsetree for the then-clause, and 'Else' 
+% is the parsetree for the else-clause.
+
+wp(Pre,(S1;S2),Post) :- S2==''
+                         -> wp(Pre,S1,Post)
+                         ; wp(Pre1,S2,Post), wp(Pre,S1,Pre1) 
+                         .
+%When cmpdstmt is empty or when else is omitted
+wp(Pre,'',Post) :- Pre=Post.
+wp(Pre,V=E,Post) :- subst(Post,V,E,Pre).
+wp((B --> TR) and (not(B) --> TF),if(B,Then),Post) :- wp(TR,Then,Post), wp(TF,'',Post).
+wp((B --> TR) and (not(B) --> TF),ifelse(B,Then,Else),Post) :- wp(TR,Then,Post), wp(TF,Else,Post).
+%Note only two remainder cases for while due to always having a '' at the end of stmts
+wp(Pre,(while(B,Do);R),Post) :- write('Enter loop invariant for: while ('),
+                             write(B), write(') {'), write(Do), write('}'),
+                             read(INVT), prove((B and INVT),Do,INVT),
+                             theorem(((not(B) and INVT) --> Post)),
+                             wp(Pre,R,INVT).
+wp(Pre,(R1;while(B,Do);R2),Post) :- write('Enter loop invariant for: while ('),
+                             write(B), write(') {'), write(Do), write('}'),
+                             read(INVT), prove((B and INVT),Do,INVT),
+                             theorem(((not(B) and INVT) --> Post)),
+                             wp(Pre,(R1;R2),INVT).
+
+% ________________________________________________________________________
+
+
+theorem(T) :- nl, write('Is the following true? '), nl, nl, 
+	      pprin(T,1), nl, nl, 
+	      write('Enter true./false.: '), read(Inp),
+	      Inp = true.
+
+
+% __________ Substitution:  P[V <- E] = Q ______________________________
+
+subst(V,V,E,E) :- !.
+subst(P,V,E,Q) :-
+	P =.. [Op|L],
+	!,
+	subst_list(L,V,E,L2),
+	Q2 =.. [Op|L2],
+        simplify(Q2,Q).
+subst(A,_,_,A).
+
+subst_list([],_,_,[]).
+subst_list([H|T],V,E,[H2|T2]) :- 
+	subst(H,V,E,H2), 
+	subst_list(T,V,E,T2).
+
+
+%_________________Code for pretty printing_______________________________
+
+pprin((A and B), N) :-  !, 
+	simplify(A,A2), pprin(A2,N), write(' and '), nl, 
+	simplify(B,B2), pprin(B2,N).
+pprin((A --> B), N) :-  !, 
+	simplify(A,A2), pprin(A2,N), nl, 
+	tabs(N), write('-->'), nl, M is N+1, 
+        simplify(B,B2), pprin(B2,M).
+pprin(not(not(A)), N)  :-  !, simplify(A, A2), tabs(N), write(A2).
+pprin(not(A), N)  :-  simplify(not, A, A2), tabs(N), write(A2).
+pprin(not(A), N)  :-  tabs(N), write(' not '), write(A).
+pprin(A, N) :-  tabs(N), write(A).
+
+tabs(0) :- !.
+tabs(N) :- write('   '), M is N-1, tabs(M).
+
+%____Code for simplification _____________________________________________
+
+simplify((1-1), 0) :- !.
+simplify((1*1), 1) :- !.
+simplify((X+0), X) :- !.
+simplify((X+1)-1, X) :- !.
+simplify((X-1)+1, X) :- !.
+simplify((X+1)=<(Y+1), (X=<Y)) :- !.
+simplify(1=<(Y+1), (0=<Y)) :- !.
+simplify(X, X).
+
+simplify(not,(I=<J), (I>=A)) :- simplify(J+1,A), !.
+simplify(not,(I=<J-1),I>=J).
+simplify(not,(X>Y), (X=<Y)).
+simplify(not,(X<Y), (X>=Y)).

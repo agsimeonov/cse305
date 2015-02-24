@@ -1,0 +1,67 @@
+:- op(700, xfx, ':=').
+:- op(650, xfx, '=<').
+:- op(650, xfx, '>=').
+:- op(650, xfx, '>').
+:- op(650, xfx, '<').
+:- op(600, yfx, and).
+
+parse(Tokens,Triple) :- program(Triple,Tokens, []), !.
+
+
+%______________________________________________________________________________
+
+% WRITE DCG FOR program AND OTHER STATEMENTS OVER HERE
+
+program(triple(P,S,Q)) --> [input], bexpr(P), [output], bexpr(Q), [program], cmpdstmt(S), ['.'].
+
+cmpdstmt(S) --> ['{'], stmts(S), ['}'].
+
+stmts((S1;S2)) --> stmt(S1), [';'], stmts(S2).
+stmts('') --> [].
+
+stmt(A) --> assign(A).
+stmt(I) --> ifthen(I).
+stmt(I) --> ifthenelse(I).
+stmt(W) --> whiledo(W).
+
+assign(V=E) --> var(V), ['='], expr(E).
+ifthen(if(B,Then)) --> [if], ['('], bexpr(B), [')'], cmpdstmt(Then).
+ifthenelse(ifelse(B,Then,Else)) --> [if], ['('], bexpr(B), [')'], cmpdstmt(Then), [else], cmpdstmt(Else).
+whiledo(while(B,Do)) --> [while], ['('], bexpr(B), [')'], cmpdstmt(Do).
+
+%_____________________________________________________________________________
+
+% NOTE: PLEASE USE THE FOLLOWING EXPRESSION GRAMMAR (expr and bexpr)
+
+
+bexpr(T)  --> expr(T).
+
+expr(T)   --> term(T1), term2(T1, T).
+
+term2(T1,T)  --> [OP], {operator(OP)}, term(T2), {T3 =.. [OP,T1,T2]}, 
+		 term2(T3,T).
+term2(T,T)  --> [].
+
+term(X) --> int(X).
+term(T) --> ['('], expr(T), [')']. 
+term(not(X)) --> [not], expr(X).
+term(T) --> var(X), ['('], exprlist(L), [')'], {T =.. [X|L]}.
+term(X) --> var(X).
+
+var(X)  --> [id(X)].
+int(X)  --> [num(X)].
+
+exprlist([E])   --> expr(E).
+exprlist([E|L]) --> expr(E), [','], exprlist(L).
+
+operator(+).  
+operator(-).  
+operator(/).  
+operator(*).
+operator(and).  
+operator(>=).  
+operator(=<).  
+operator(=).  
+operator(>).  
+operator(<).
+

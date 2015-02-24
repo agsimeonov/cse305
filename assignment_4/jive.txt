@@ -1,0 +1,4 @@
+The differences in the object structures of BST.java and BSTequiv.java are rather obvious.
+
+First of all BST.java clearly uses class inheritance because as seen in Duptree a Duptree is Tree which in turn is an Abstree.
+In BSTequiv.java we can clearly see delegation.  Here a Duptree uses a tree which in turn uses an Abstree to create the data structure.  This by definition is delegation because a class does not perform it's own tasks but rather delegates them to a helper object.  

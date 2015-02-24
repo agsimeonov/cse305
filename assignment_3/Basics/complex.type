@@ -1,0 +1,8 @@
+let fun pair x y z = z x y;
+    fun f1 y = pair y y;
+    fun f2 y = f1 (f1 y);
+    fun f3 y = f2 (f2 y)
+in
+    f3 (fn x:int => x)
+end;
+

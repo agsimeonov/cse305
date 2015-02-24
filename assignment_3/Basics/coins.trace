@@ -1,0 +1,17 @@
+castor % sml
+Standard ML of New Jersey v110.54 [built: Fri Jun 24 16:28:49 2005]
+- use "coins.sml";
+[opening coins.sml]
+datatype coin
+  = dime of int
+  | dollar of int
+  | halfd of int
+  | nickel of int
+  | penny of int
+  | quarter of int
+val value = fn : coin -> int
+val netvalue = fn : coin list -> int
+val it = () : unit
+- netvalue([quarter(5), dime(10), penny(2)]);
+val it = 227 : int
+- 
