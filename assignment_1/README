@@ -1,0 +1,18 @@
+This directory has:
+
+* Assignment # 1
+
+* Files for the assignment:
+
+	Token.java
+	Lex.java
+	Test.java
+	Parser.java	(to be completed by you)
+
+* Subdirectory EXPR:  Recognizer for simple expression language
+  (to be) discussed in the lectures and recitations:
+
+	Token.java
+	Lex.java
+	Test.java
+	Recognizer.java	
